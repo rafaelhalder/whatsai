@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  name         String
+  email        String     @unique
+  passwordHash String
+  createdAt    DateTime   @default(now())
+  instances    Instance[]
+  settings     Setting?
+
+  Token Token[]
+}
+
+model Instance {
+  id             Int            @id @default(autoincrement())
+  user           User           @relation(fields: [userId], references: [id])
+  userId         Int
+  instanceName   String
+  whatsappNumber String
+  status         String // e.g., "connected", "disconnected"
+  qrCode         String?
+  createdAt      DateTime       @default(now())
+  conversations  Conversation[]
+}
+
+model Conversation {
+  id            Int       @id @default(autoincrement())
+  instance      Instance  @relation(fields: [instanceId], references: [id])
+  instanceId    Int
+  contactNumber String
+  contactName   String?
+  lastMessageAt DateTime?
+  status        String    @default("open") // open, closed, pending
+  createdAt     DateTime  @default(now())
+  messages      Message[]
+}
+
+model Message {
+  id             Int          @id @default(autoincrement())
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId Int
+  senderType     String // "user", "contact", "ai"
+  messageText    String
+  messageType    String       @default("text") // "text", "image", etc.
+  timestamp      DateTime     @default(now())
+}
+
+model Setting {
+  id            Int     @id @default(autoincrement())
+  user          User    @relation(fields: [userId], references: [id])
+  userId        Int     @unique
+  useAi         Boolean @default(false)
+  autoReplyText String?
+  workingHours  Json? // e.g. { start: "08:00", end: "18:00" }
+}
+
+model Token {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  token     String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
