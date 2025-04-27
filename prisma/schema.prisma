@@ -14,65 +14,76 @@ datasource db {
 }
 
 model User {
-  id           Int        @id @default(autoincrement())
+  id           String     @id @default(uuid())
   name         String
   email        String     @unique
   passwordHash String
   createdAt    DateTime   @default(now())
   instances    Instance[]
   settings     Setting?
+  Token        Token[]
 
-  Token Token[]
+  @@map("users")
 }
 
 model Instance {
-  id             Int            @id @default(autoincrement())
+  id             String         @id @default(uuid())
   user           User           @relation(fields: [userId], references: [id])
-  userId         Int
+  userId         String         @map("user_id")
   instanceName   String
   whatsappNumber String
   status         String // e.g., "connected", "disconnected"
   qrCode         String?
   createdAt      DateTime       @default(now())
   conversations  Conversation[]
+
+  @@map("instances")
 }
 
 model Conversation {
-  id            Int       @id @default(autoincrement())
+  id            String    @id @default(uuid())
   instance      Instance  @relation(fields: [instanceId], references: [id])
-  instanceId    Int
+  instanceId    String    @map("instance_id")
   contactNumber String
   contactName   String?
   lastMessageAt DateTime?
   status        String    @default("open") // open, closed, pending
   createdAt     DateTime  @default(now())
   messages      Message[]
+
+  @@map("conversations")
 }
 
 model Message {
-  id             Int          @id @default(autoincrement())
+  id             String       @id @default(uuid())
   conversation   Conversation @relation(fields: [conversationId], references: [id])
-  conversationId Int
+  conversationId String       @map("conversation_id")
   senderType     String // "user", "contact", "ai"
   messageText    String
   messageType    String       @default("text") // "text", "image", etc.
   timestamp      DateTime     @default(now())
+
+  @@map("messages")
 }
 
 model Setting {
-  id            Int     @id @default(autoincrement())
+  id            String  @id @default(uuid())
   user          User    @relation(fields: [userId], references: [id])
-  userId        Int     @unique
+  userId        String  @unique @map("user_id")
   useAi         Boolean @default(false)
   autoReplyText String?
   workingHours  Json? // e.g. { start: "08:00", end: "18:00" }
+
+  @@map("settings")
 }
 
 model Token {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   user      User     @relation(fields: [userId], references: [id])
-  userId    Int
+  userId    String   @map("user_id")
   token     String
   expiresAt DateTime
   createdAt DateTime @default(now())
+
+  @@map("tokens")
 }

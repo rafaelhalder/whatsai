@@ -1,4 +1,4 @@
-import {Request,Response,NextFunction} from "express";
+import {Request,Response,NextFunction, json} from "express";
 import {z} from "zod";
 import { RegisterUseCase } from "@/use-cases/register";
 import { PrismaUsersRepository } from "@/repositories/prisma/prisma-users-repository";
@@ -15,13 +15,13 @@ class registerController{
     try {
       const prismaUsersRepository = new PrismaUsersRepository()
       const registerUseCase = new RegisterUseCase(prismaUsersRepository)
-      await registerUseCase.execute({
+      const user = await registerUseCase.execute({
         name,
         email,
         password
       })
       
-      response.status(201).send()
+      response.status(201).send(user)
       next()
     } catch (error) {
       throw error    
