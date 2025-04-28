@@ -27,7 +27,7 @@ describe("RegisterUseCase", ()=> {
     const response = await request(app).post("/register").send({
       name: "Jodasdadshn Doe",
       email: "ra@exec.com",
-      password: "1234561"
+      password: "1234561" 
     })
     expect(response.statusCode).toEqual(400)
     expect(response.body).toHaveProperty("message", "E-mail already exists")
