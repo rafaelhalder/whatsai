@@ -14,15 +14,17 @@ datasource db {
 }
 
 model User {
-  id           String     @id @default(uuid())
-  name         String
-  email        String     @unique
-  passwordHash String
-  createdAt    DateTime   @default(now())
-  instances    Instance[]
-  settings     Setting?
-  Token        Token[]
+  id              String     @id @default(uuid())
+  name            String
+  email           String     @unique
+  passwordHash    String
+  createdAt       DateTime   @default(now())
+  instances       Instance[]
+  settings        Setting?
+  Token           Token[]
+  accessExpiresAt DateTime?
 
+  //    accessExpiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
   @@map("users")
 }
 
