@@ -1,8 +1,5 @@
 import { Router } from 'express'
-import { createWhatsappInstanceController } from '@/http/controllers/createWhatsappInstanceController'
-
-const router = Router()
-
-router.post('/whatsapp/instance', createWhatsappInstanceController)
-
-export default router
+import { CreateWhatsappInstanceController } from '@/http/controllers/instancewhatsapp'
+export const whatsRoutes = Router()
+const WhatsController = new CreateWhatsappInstanceController()
+whatsRoutes.post('/', WhatsController.createWhatsappInstanceController)
