@@ -10,6 +10,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
+    "isolatedModules": true,
 
     // Define o sistema de módulos que será utilizado.
     "module": "Node16",

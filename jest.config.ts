@@ -13,6 +13,7 @@ const config: Config = {
   coverageDirectory: "coverage",
   coverageProvider: "v8",
   preset: 'ts-jest',
+  setupFiles: ["dotenv/config"], // Carrega o .env antes dos testes
   testEnvironment: 'node',
   testMatch: ["<rootDir>/src/**/*.(spec|test).ts"],
   moduleNameMapper:{
