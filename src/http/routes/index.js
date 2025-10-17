@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.routes = void 0;
+const express_1 = require("express");
+const register_1 = require("./register");
+const authenticate_1 = require("./authenticate");
+const whatsapp_1 = require("./whatsapp");
+const routes = (0, express_1.Router)();
+exports.routes = routes;
+routes.use("/register", register_1.registerRoutes);
+routes.use("/authenticate", authenticate_1.authenticateRoutes);
+routes.use("/instance", whatsapp_1.whatsRoutes);
